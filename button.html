@@ -6,8 +6,8 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html, body {
-    width: 240px;
-    height: 110px;
+    width: 360px;
+    height: 160px;
     background: transparent;
     overflow: hidden;
     -webkit-user-select: none;
@@ -23,57 +23,69 @@
   #joy-btn {
     cursor: pointer;
     background: linear-gradient(
-      160deg,
-      rgba(255,255,255,0.97) 0%,
-      rgba(235,237,245,0.88) 100%
+      170deg,
+      rgba(255,255,255,1) 0%,
+      rgba(232,235,248,0.98) 55%,
+      rgba(218,222,240,0.96) 100%
     );
     backdrop-filter: blur(40px) saturate(220%);
     -webkit-backdrop-filter: blur(40px) saturate(220%);
     border: none;
-    border-radius: 16px;
-    padding: 0 26px;
-    height: 46px;
+    border-radius: 22px;
+    padding: 0 40px;
+    height: 70px;
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Rounded', 'SF Pro Display', sans-serif;
-    font-size: 15px;
+    font-size: 22px;
     font-weight: 600;
     color: #1c1c1e;
-    letter-spacing: -0.2px;
+    letter-spacing: -0.3px;
     white-space: nowrap;
     position: relative;
-    transition: transform 0.12s cubic-bezier(0.2,1.6,0.4,1), box-shadow 0.12s ease;
+    transition: transform 0.12s cubic-bezier(0.2,1.6,0.4,1), box-shadow 0.12s ease, filter 0.12s ease;
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.9),
-      0 4px 16px rgba(0,0,0,0.18),
-      0 1px 4px rgba(0,0,0,0.1);
+      inset 0 2px 0 rgba(255,255,255,1),
+      inset 2px 0 0 rgba(255,255,255,0.6),
+      inset 0 -5px 0 rgba(0,0,0,0.18),
+      inset -1.5px 0 0 rgba(0,0,0,0.08),
+      0 8px 24px rgba(0,0,0,0.26),
+      0 3px 7px rgba(0,0,0,0.14);
+    filter: drop-shadow(0 16px 28px rgba(0,0,0,0.35)) drop-shadow(0 4px 8px rgba(0,0,0,0.2));
   }
 
   #joy-btn::before {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: 30px;
+    border-radius: 22px;
     background: linear-gradient(
-      170deg,
-      rgba(255,255,255,0.5) 0%,
-      rgba(255,255,255,0) 60%
+      165deg,
+      rgba(255,255,255,0.6) 0%,
+      rgba(255,255,255,0) 50%
     );
     pointer-events: none;
   }
 
   #joy-btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-3px);
+    filter: drop-shadow(0 22px 36px rgba(0,0,0,0.4)) drop-shadow(0 6px 12px rgba(0,0,0,0.22));
     box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.9),
-      0 6px 20px rgba(0,0,0,0.2),
-      0 2px 6px rgba(0,0,0,0.1);
+      inset 0 2px 0 rgba(255,255,255,1),
+      inset 2px 0 0 rgba(255,255,255,0.6),
+      inset 0 -5px 0 rgba(0,0,0,0.18),
+      inset -1.5px 0 0 rgba(0,0,0,0.08),
+      0 14px 32px rgba(0,0,0,0.28),
+      0 5px 10px rgba(0,0,0,0.15);
   }
 
   #joy-btn:active {
-    transform: translateY(1px) scale(0.97);
+    transform: translateY(4px) scale(0.98);
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.22)) drop-shadow(0 2px 4px rgba(0,0,0,0.14));
     box-shadow:
-      inset 0 1px 3px rgba(0,0,0,0.08),
-      0 2px 6px rgba(0,0,0,0.12),
-      0 1px 2px rgba(0,0,0,0.08);
+      inset 0 1.5px 0 rgba(255,255,255,0.7),
+      inset 1.5px 0 0 rgba(255,255,255,0.3),
+      inset 0 -1px 0 rgba(0,0,0,0.1),
+      0 2px 8px rgba(0,0,0,0.16),
+      0 1px 3px rgba(0,0,0,0.1);
   }
 </style>
 </head>
@@ -87,7 +99,6 @@ const path = require('path');
 const btn = document.getElementById('joy-btn');
 let audio = null;
 
-// Drag + click — works on the button itself
 const DRAG_THRESHOLD = 4;
 let dragging = false, offX, offY, startX, startY, didDrag = false;
 
@@ -117,7 +128,6 @@ document.addEventListener('mouseup', () => {
   btn.style.cursor = 'pointer';
 });
 
-// Button click — only fires if it wasn't a drag
 btn.addEventListener('click', () => {
   if (didDrag) return;
   ipcRenderer.send('fire-joy');

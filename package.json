@@ -1,6 +1,6 @@
 {
   "name": "joy-widget",
-  "version": "1.4.0",
+  "version": "1.6.0",
   "description": "bring me joy",
   "main": "main.js",
   "scripts": {
@@ -25,6 +25,7 @@
       "button.html",
       "overlay.html",
       "audio/**",
+      "assets/button.png",
       "node_modules/electron-updater/**"
     ],
     "publish": {
