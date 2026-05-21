@@ -147,7 +147,9 @@
 </div>
 <script>
 // ---- Config ----
-const PLAYLIST_ID = '435plpI14LbUXSru6OJTrM';
+const TRACKS = [
+  { name: 'Just a Weekend', artists: [{ name: '' }], preview_url: '/audio/just a weekend.mp3' }
+];
 
 // ---- Elements ----
 const btn = document.getElementById('joy-btn');
@@ -159,40 +161,11 @@ const nowPlaying = document.getElementById('now-playing');
 const npText = document.getElementById('np-text');
 
 let W, H, pieces = [], animating = false, rafId;
-let tracks = [], currentAudio = null, fadeTimer = null;
-let tokenExpiry = 0, accessToken = null;
+let tracks = TRACKS, currentAudio = null, fadeTimer = null;
 
 function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 resize();
 window.addEventListener('resize', resize);
-
-// ---- Spotify: Client Credentials flow ----
-async function getToken() {
-  if (accessToken && Date.now() < tokenExpiry) return accessToken;
-  const res = await fetch('/.netlify/functions/spotify-token');
-  const data = await res.json();
-  accessToken = data.access_token;
-  tokenExpiry = Date.now() + (data.expires_in - 60) * 1000;
-  return accessToken;
-}
-
-async function loadPlaylist() {
-  try {
-    const token = await getToken();
-    // Fetch up to 100 tracks
-    const res = await fetch(`https://api.spotify.com/v1/playlists/${PLAYLIST_ID}/tracks?limit=100&fields=items(track(name,artists,preview_url))`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    const data = await res.json();
-    // Filter to only tracks with preview URLs
-    tracks = (data.items || [])
-      .map(i => i.track)
-      .filter(t => t && t.preview_url);
-    console.log(`Loaded ${tracks.length} previewable tracks`);
-  } catch (e) {
-    console.error('Playlist load failed:', e);
-  }
-}
 
 function pickRandomTrack() {
   if (!tracks.length) return null;
@@ -257,20 +230,18 @@ const COLORS = [
 
 class Piece {
   constructor() {
-    const cx = W / 2, cy = H / 2;
-    this.x = cx; this.y = cy;
-    const angle = Math.random() * Math.PI * 2;
-    const speed = 5 + Math.random() * 14;
-    this.vx = Math.cos(angle) * speed;
-    this.vy = Math.sin(angle) * speed - (3 + Math.random() * 4);
-    this.gravity = 0.25 + Math.random() * 0.15;
+    this.x = Math.random() * W;
+    this.y = -20 - Math.random() * H * 0.5;
+    this.vx = (Math.random() - 0.5) * 6;
+    this.vy = 3 + Math.random() * 6;
+    this.gravity = 0.08 + Math.random() * 0.08;
     this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
     this.w = 6 + Math.random() * 10;
     this.h = this.w * (0.3 + Math.random() * 0.5);
     this.rot = Math.random() * Math.PI * 2;
     this.rotV = (Math.random() - 0.5) * 0.25;
     this.life = 1;
-    this.decay = 0.008 + Math.random() * 0.012;
+    this.decay = 0.003 + Math.random() * 0.005;
     this.shape = Math.random() > 0.4 ? 'rect' : 'circle';
     this.wobble = Math.random() * Math.PI * 2;
     this.wobbleSpeed = 0.08 + Math.random() * 0.08;
@@ -309,7 +280,7 @@ function loop() {
 }
 
 function burst() {
-  for (let i = 0; i < 120; i++) pieces.push(new Piece());
+  for (let i = 0; i < 300; i++) pieces.push(new Piece());
   cancelAnimationFrame(rafId);
   loop();
 }
@@ -343,19 +314,8 @@ btn.addEventListener('click', () => {
   fireJoy();
 
   const track = pickRandomTrack();
-  if (track) {
-    playTrack(track);
-  } else {
-    // Retry token + playlist if empty
-    loadPlaylist().then(() => {
-      const t = pickRandomTrack();
-      if (t) playTrack(t);
-    });
-  }
+  if (track) playTrack(track);
 });
-
-// ---- Init ----
-loadPlaylist();
 </script>
 </body>
 </html>

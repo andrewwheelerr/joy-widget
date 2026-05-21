@@ -1,0 +1,39 @@
+{
+  "name": "joy-widget",
+  "version": "1.1.0",
+  "description": "bring me joy",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --mac --dir",
+    "dist": "electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "build": {
+    "appId": "com.joy.widget",
+    "productName": "Joy",
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "files": [
+      "main.js",
+      "button.html",
+      "overlay.html",
+      "audio/**",
+      "node_modules/electron-updater/**"
+    ],
+    "publish": {
+      "provider": "github",
+      "owner": "andrewwheelerr",
+      "repo": "joy-widget"
+    }
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.3"
+  }
+}
