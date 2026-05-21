@@ -13,7 +13,6 @@ function createButtonWindow() {
     height: 110,
     frame: false,
     transparent: true,
-    alwaysOnTop: true,
     resizable: false,
     hasShadow: false,
     skipTaskbar: true,
@@ -24,7 +23,9 @@ function createButtonWindow() {
   });
 
   buttonWin.loadFile('button.html');
-  buttonWin.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  buttonWin.setAlwaysOnTop(true, 'floating');
+  buttonWin.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true, skipTransformProcessType: true });
+  buttonWin.webContents.on('did-finish-load', () => app.dock.show());
 
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Quit Joy', click: () => app.quit() }
@@ -77,6 +78,7 @@ ipcMain.on('overlay-done', () => {
 
 app.whenReady().then(() => {
   createButtonWindow();
+  app.dock.show();
   autoUpdater.checkForUpdatesAndNotify();
 });
 
