@@ -147,7 +147,6 @@
 </div>
 <script>
 // ---- Config ----
-const CLIENT_ID = 'bcf2ff3cdae44121b56da01f2cf22144';
 const PLAYLIST_ID = '435plpI14LbUXSru6OJTrM';
 
 // ---- Elements ----
@@ -170,11 +169,7 @@ window.addEventListener('resize', resize);
 // ---- Spotify: Client Credentials flow ----
 async function getToken() {
   if (accessToken && Date.now() < tokenExpiry) return accessToken;
-  const res = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `grant_type=client_credentials&client_id=${CLIENT_ID}`
-  });
+  const res = await fetch('/.netlify/functions/spotify-token');
   const data = await res.json();
   accessToken = data.access_token;
   tokenExpiry = Date.now() + (data.expires_in - 60) * 1000;
