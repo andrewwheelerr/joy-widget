@@ -1,8 +1,8 @@
 # Hey Savannah 👋
 
-This is the roadmap for what we're building next together. Each section below is a feature — what it does, why it matters, and what we need to build. We're going to use AI-assisted coding to build these one at a time, so don't worry about knowing how to write everything from scratch. The goal is to learn by doing.
+Heard you wanted to learn how claude works better - This is the roadmap for something we can build together. Each section below is a feature — what it does, why it matters, and what we need to build. We're going to use claude to build these one at a time, so don't worry about knowing how to write everything from scratch. The goal is to learn by doing.
 
-The big idea: Joy is a private, one-to-one product built for two people. One person leaves voice notes. The other presses a button and gets a random moment of joy. That's it.
+The big idea: Joy is a private, one-to-one product built for two people. One person leaves a song, or voice notes. The other presses a button and gets a random moment of joy. That's it.
 
 ---
 
@@ -10,11 +10,11 @@ The big idea: Joy is a private, one-to-one product built for two people. One per
 
 **What it does**
 
-Two people connect privately. You create a pair, send an invite link or code, and once the other person joins, you're connected. Everything stays between the two of you.
+You create a pair, send an invite link or code, and once the other person joins, you're connected. Everything stays between the two of you.
 
 **Why it matters**
 
-The product only works if it feels personal. If anyone could join, it becomes another inbox. The magic is knowing the message was made for you, by one person who matters.
+The product only works if it feels personal. The magic is knowing the message was made for you, by one person who matters.
 
 **What we need to build**
 
