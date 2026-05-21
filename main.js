@@ -33,7 +33,7 @@ function createButtonWindow() {
   buttonWin.webContents.on('context-menu', () => contextMenu.popup());
 }
 
-function createOverlay() {
+function createOverlay(originX, originY) {
   const { width, height } = screen.getPrimaryDisplay().bounds;
 
   overlayWin = new BrowserWindow({
@@ -52,7 +52,7 @@ function createOverlay() {
     },
   });
 
-  overlayWin.loadFile('overlay.html');
+  overlayWin.loadFile('overlay.html', { query: { ox: String(originX), oy: String(originY) } });
   overlayWin.setIgnoreMouseEvents(true);
   overlayWin.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
 
@@ -65,8 +65,15 @@ ipcMain.on('drag-move', (e, { x, y }) => {
 });
 
 ipcMain.on('fire-joy', () => {
-  if (overlayWin) return;
-  createOverlay();
+  const [bx, by] = buttonWin.getPosition();
+  const [bw, bh] = buttonWin.getSize();
+  const ox = bx + bw / 2;
+  const oy = by + bh / 2;
+  if (overlayWin) {
+    overlayWin.webContents.send('burst', { ox, oy });
+  } else {
+    createOverlay(ox, oy);
+  }
 });
 
 ipcMain.on('overlay-done', () => {

@@ -122,17 +122,18 @@ btn.addEventListener('click', () => {
   if (didDrag) return;
   ipcRenderer.send('fire-joy');
 
-  if (audio) { audio.pause(); audio.currentTime = 0; }
-  audio = new Audio(path.join(__dirname, 'audio', 'just a weekend.mp3'));
-  audio.volume = 0;
-  audio.play().catch(() => {});
+  if (!audio || audio.ended) {
+    audio = new Audio(path.join(__dirname, 'audio', 'just a weekend.mp3'));
+    audio.volume = 0;
+    audio.play().catch(() => {});
 
-  let vol = 0;
-  const fadeIn = setInterval(() => {
-    vol = Math.min(1, vol + 0.05);
-    if (audio) audio.volume = vol;
-    if (vol >= 1) clearInterval(fadeIn);
-  }, 50);
+    let vol = 0;
+    const fadeIn = setInterval(() => {
+      vol = Math.min(1, vol + 0.05);
+      if (audio) audio.volume = vol;
+      if (vol >= 1) clearInterval(fadeIn);
+    }, 50);
+  }
 });
 </script>
 </body>
