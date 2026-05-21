@@ -2,11 +2,11 @@
 
 This is the roadmap for what we're building next together. Each section below is a feature — what it does, why it matters, and what we need to build. We're going to use AI-assisted coding to build these one at a time, so don't worry about knowing how to write everything from scratch. The goal is to learn by doing.
 
-The big idea: Joy Widget is a private, one-to-one product built for two people. One person leaves voice notes. The other presses a button and gets a random moment of joy. That's it. We're keeping it small and meaningful on purpose.
+The big idea: Joy is a private, one-to-one product built for two people. One person leaves voice notes. The other presses a button and gets a random moment of joy. That's it.
 
 ---
 
-## Feature 1 — Pair With One Person
+## Feature 1 — Pair With Another Person
 
 **What it does**
 
@@ -86,23 +86,6 @@ Random playback creates delight. Favorites create lasting value. A saved note be
 
 ---
 
-## What We're Not Building Yet
-
-To keep things focused, these are intentionally off the list for now:
-
-- Group messaging
-- Public profiles
-- Comments or feeds
-- AI-generated notes
-- Social sharing
-- A full mobile app
-
-If a feature doesn't make the experience more intimate, easier to add emotional supply, or more repeatable — it waits.
-
----
-
 ## How We'll Build This
 
-We'll go one feature at a time. For each one, we'll open Claude Code, describe what we want, and let it help us write the code. You don't need to know everything before we start — the point is to learn as we go, understand what the code is doing, and build something real together.
-
-Start with Feature 1. See you there.
+We'll go one feature at a time. For each one, we'll open Claude Code, describe what we want, and let it help us write the code. You don't need to know everything before we start — the point is to learn as we go, understand what the code is doing, and build something fun.
