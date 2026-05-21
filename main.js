@@ -5,12 +5,17 @@ const { autoUpdater } = require('electron-updater');
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
 
+autoUpdater.on('update-downloaded', () => {
+  app.dock.setBadge('♪');
+});
+
+
 let buttonWin, overlayWin;
 
 function createButtonWindow() {
   buttonWin = new BrowserWindow({
-    width: 240,
-    height: 110,
+    width: 360,
+    height: 160,
     frame: false,
     transparent: true,
     resizable: false,
@@ -25,7 +30,6 @@ function createButtonWindow() {
   buttonWin.loadFile('button.html');
   buttonWin.setAlwaysOnTop(true, 'floating');
   buttonWin.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true, skipTransformProcessType: true });
-  buttonWin.webContents.on('did-finish-load', () => app.dock.show());
 
   const contextMenu = Menu.buildFromTemplate([
     { label: 'Quit Joy', click: () => app.quit() }
@@ -65,6 +69,7 @@ ipcMain.on('drag-move', (e, { x, y }) => {
 });
 
 ipcMain.on('fire-joy', () => {
+  app.dock.setBadge('');
   const [bx, by] = buttonWin.getPosition();
   const [bw, bh] = buttonWin.getSize();
   const ox = bx + bw / 2;
@@ -85,7 +90,7 @@ ipcMain.on('overlay-done', () => {
 
 app.whenReady().then(() => {
   createButtonWindow();
-  app.dock.show();
+  setTimeout(() => app.dock.show(), 200);
   autoUpdater.checkForUpdatesAndNotify();
 });
 
