@@ -133,7 +133,7 @@ btn.addEventListener('click', () => {
   ipcRenderer.send('fire-joy');
 
   if (!audio || audio.ended) {
-    audio = new Audio(path.join(__dirname, 'audio', 'just a weekend.mp3'));
+    audio = new Audio(path.join(__dirname, 'audio', 'Pete’s Bar Shines (1.50x).mp3'));
     audio.volume = 0;
     audio.play().catch(() => {});
 
