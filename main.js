@@ -4,9 +4,23 @@ const { autoUpdater } = require('electron-updater');
 
 autoUpdater.autoDownload = true;
 autoUpdater.autoInstallOnAppQuit = true;
+autoUpdater.logger = require('electron-log');
+autoUpdater.logger.transports.file.level = 'info';
 
 autoUpdater.on('update-downloaded', () => {
   app.dock.setBadge('♪');
+});
+
+autoUpdater.on('error', (err) => {
+  autoUpdater.logger.error('Update error:', err);
+});
+
+autoUpdater.on('update-available', () => {
+  autoUpdater.logger.info('Update available, downloading...');
+});
+
+autoUpdater.on('update-not-available', () => {
+  autoUpdater.logger.info('No update available.');
 });
 
 
