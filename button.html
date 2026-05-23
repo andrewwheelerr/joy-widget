@@ -93,57 +93,78 @@
 <button id="joy-btn">bring me joy</button>
 
 <script>
-const { ipcRenderer } = require('electron');
-const path = require('path');
+const { ipcRenderer } = require(‘electron’);
+const path = require(‘path’);
 
-const btn = document.getElementById('joy-btn');
+const btn = document.getElementById(‘joy-btn’);
 let audio = null;
+
+const TRACKS = [
+  "Pete’s Bar Shines (1.50x).mp3",
+  "just a weekend.mp3",
+];
+
+const LABELS = [
+  ‘bring me joy’,
+  ‘one more time’,
+  ‘yes please’,
+  ‘again!’,
+  ‘keep going’,
+  ‘more joy’,
+];
+let labelIndex = 0;
 
 const DRAG_THRESHOLD = 4;
 let dragging = false, offX, offY, startX, startY, didDrag = false;
 
-document.addEventListener('mousedown', e => {
+document.addEventListener(‘mousedown’, e => {
   dragging = true;
   didDrag = false;
   offX = startX = e.screenX;
   offY = startY = e.screenY;
-  document.body.style.cursor = 'grabbing';
-  btn.style.cursor = 'grabbing';
+  document.body.style.cursor = ‘grabbing’;
+  btn.style.cursor = ‘grabbing’;
 });
 
-document.addEventListener('mousemove', e => {
+document.addEventListener(‘mousemove’, e => {
   if (!dragging) return;
   const totalDx = Math.abs(e.screenX - startX);
   const totalDy = Math.abs(e.screenY - startY);
   if (!didDrag && totalDx < DRAG_THRESHOLD && totalDy < DRAG_THRESHOLD) return;
   didDrag = true;
-  ipcRenderer.send('drag-move', { x: e.screenX - offX, y: e.screenY - offY });
+  ipcRenderer.send(‘drag-move’, { x: e.screenX - offX, y: e.screenY - offY });
   offX = e.screenX;
   offY = e.screenY;
 });
 
-document.addEventListener('mouseup', () => {
+document.addEventListener(‘mouseup’, () => {
   dragging = false;
-  document.body.style.cursor = 'grab';
-  btn.style.cursor = 'pointer';
+  document.body.style.cursor = ‘grab’;
+  btn.style.cursor = ‘pointer’;
 });
 
-btn.addEventListener('click', () => {
+btn.addEventListener(‘click’, () => {
   if (didDrag) return;
-  ipcRenderer.send('fire-joy');
+  ipcRenderer.send(‘fire-joy’);
 
-  if (!audio || audio.ended) {
-    audio = new Audio(path.join(__dirname, 'audio', 'Pete’s Bar Shines (1.50x).mp3'));
-    audio.volume = 0;
-    audio.play().catch(() => {});
+  labelIndex = (labelIndex + 1) % LABELS.length;
+  btn.textContent = LABELS[labelIndex];
 
-    let vol = 0;
-    const fadeIn = setInterval(() => {
-      vol = Math.min(1, vol + 0.05);
-      if (audio) audio.volume = vol;
-      if (vol >= 1) clearInterval(fadeIn);
-    }, 50);
+  if (audio) {
+    audio.pause();
+    audio.src = ‘’;
   }
+  const track = TRACKS[Math.floor(Math.random() * TRACKS.length)];
+  audio = new Audio(path.join(__dirname, ‘audio’, track));
+  audio.volume = 0;
+  audio.play().catch(() => {});
+
+  let vol = 0;
+  const fadeIn = setInterval(() => {
+    vol = Math.min(1, vol + 0.05);
+    if (audio) audio.volume = vol;
+    if (vol >= 1) clearInterval(fadeIn);
+  }, 50);
 });
 </script>
 </body>
