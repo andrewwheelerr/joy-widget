@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, screen, Menu, dialog } = require('electron');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 
@@ -9,6 +9,15 @@ autoUpdater.logger.transports.file.level = 'info';
 
 autoUpdater.on('update-downloaded', () => {
   app.dock.setBadge('♪');
+  dialog.showMessageBox({
+    type: 'info',
+    buttons: ['Restart Now', 'Later'],
+    defaultId: 0,
+    title: 'Update Ready',
+    message: 'Joy has been updated. Restart to apply it.',
+  }).then(({ response }) => {
+    if (response === 0) autoUpdater.quitAndInstall();
+  });
 });
 
 autoUpdater.on('error', (err) => {
