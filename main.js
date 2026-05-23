@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, screen, Menu, dialog } = require('electron');
+const { spawn } = require('child_process');
 const path = require('path');
 const { autoUpdater } = require('electron-updater');
 
@@ -93,6 +94,12 @@ ipcMain.on('drag-move', (e, { x, y }) => {
 
 ipcMain.on('fire-joy', () => {
   app.dock.setBadge('');
+  try {
+    const hapticProc = spawn(path.join(__dirname, 'assets', 'haptic'), [], { detached: true, stdio: 'ignore' });
+    hapticProc.unref();
+  } catch (err) {
+    autoUpdater.logger.error('Haptic error:', err.message);
+  }
   const [bx, by] = buttonWin.getPosition();
   const [bw, bh] = buttonWin.getSize();
   const ox = bx + bw / 2;

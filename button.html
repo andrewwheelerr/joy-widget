@@ -23,10 +23,10 @@
   #joy-btn {
     cursor: pointer;
     background: linear-gradient(
-      170deg,
-      rgba(255,255,255,1) 0%,
-      rgba(232,235,248,0.98) 55%,
-      rgba(218,222,240,0.96) 100%
+      175deg,
+      rgba(255,255,255,1)      0%,
+      rgba(238,241,252,0.99)  45%,
+      rgba(210,216,238,0.97) 100%
     );
     backdrop-filter: blur(40px) saturate(220%);
     -webkit-backdrop-filter: blur(40px) saturate(220%);
@@ -44,11 +44,12 @@
     transition: transform 0.12s cubic-bezier(0.2,1.6,0.4,1), box-shadow 0.12s ease, filter 0.12s ease;
     box-shadow:
       inset 0 2px 0 rgba(255,255,255,1),
-      inset 2px 0 0 rgba(255,255,255,0.6),
-      inset 0 -5px 0 rgba(0,0,0,0.18),
-      inset -1.5px 0 0 rgba(0,0,0,0.08),
-      0 8px 24px rgba(0,0,0,0.26),
-      0 3px 7px rgba(0,0,0,0.14);
+      inset 0 1px 4px rgba(255,255,255,0.7),
+      inset 2px 0 0 rgba(255,255,255,0.55),
+      inset 0 -6px 0 rgba(0,0,0,0.22),
+      inset -1.5px 0 0 rgba(0,0,0,0.10),
+      0 10px 28px rgba(0,0,0,0.30),
+      0 4px 8px rgba(0,0,0,0.16);
     filter: drop-shadow(0 16px 28px rgba(0,0,0,0.35)) drop-shadow(0 4px 8px rgba(0,0,0,0.2));
   }
 
@@ -58,9 +59,23 @@
     inset: 0;
     border-radius: 22px;
     background: linear-gradient(
-      165deg,
-      rgba(255,255,255,0.6) 0%,
-      rgba(255,255,255,0) 50%
+      175deg,
+      rgba(255,255,255,0.75) 0%,
+      rgba(255,255,255,0.1)  38%,
+      rgba(255,255,255,0)    50%
+    );
+    pointer-events: none;
+  }
+
+  #joy-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    background: linear-gradient(
+      to bottom,
+      transparent 65%,
+      rgba(0,0,0,0.10) 100%
     );
     pointer-events: none;
   }
@@ -70,22 +85,30 @@
     filter: drop-shadow(0 22px 36px rgba(0,0,0,0.4)) drop-shadow(0 6px 12px rgba(0,0,0,0.22));
     box-shadow:
       inset 0 2px 0 rgba(255,255,255,1),
-      inset 2px 0 0 rgba(255,255,255,0.6),
-      inset 0 -5px 0 rgba(0,0,0,0.18),
-      inset -1.5px 0 0 rgba(0,0,0,0.08),
-      0 14px 32px rgba(0,0,0,0.28),
-      0 5px 10px rgba(0,0,0,0.15);
+      inset 0 1px 4px rgba(255,255,255,0.7),
+      inset 2px 0 0 rgba(255,255,255,0.55),
+      inset 0 -6px 0 rgba(0,0,0,0.22),
+      inset -1.5px 0 0 rgba(0,0,0,0.10),
+      0 14px 36px rgba(0,0,0,0.32),
+      0 5px 10px rgba(0,0,0,0.17);
   }
 
   #joy-btn:active {
-    transform: translateY(4px) scale(0.98);
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.22)) drop-shadow(0 2px 4px rgba(0,0,0,0.14));
+    transform: translateY(5px) scale(0.98);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18)) drop-shadow(0 1px 3px rgba(0,0,0,0.12));
+    background: linear-gradient(
+      175deg,
+      rgba(240,242,252,1)      0%,
+      rgba(220,224,244,0.99)  45%,
+      rgba(195,202,230,0.97) 100%
+    );
     box-shadow:
-      inset 0 1.5px 0 rgba(255,255,255,0.7),
-      inset 1.5px 0 0 rgba(255,255,255,0.3),
-      inset 0 -1px 0 rgba(0,0,0,0.1),
-      0 2px 8px rgba(0,0,0,0.16),
-      0 1px 3px rgba(0,0,0,0.1);
+      inset 0 4px 8px rgba(0,0,0,0.18),
+      inset 0 2px 0 rgba(0,0,0,0.08),
+      inset 2px 0 0 rgba(255,255,255,0.25),
+      inset 0 -1px 0 rgba(0,0,0,0.06),
+      0 2px 6px rgba(0,0,0,0.14),
+      0 1px 2px rgba(0,0,0,0.1);
   }
 </style>
 </head>
@@ -93,69 +116,67 @@
 <button id="joy-btn">bring me joy</button>
 
 <script>
-const { ipcRenderer } = require(‘electron’);
-const path = require(‘path’);
-
-const btn = document.getElementById(‘joy-btn’);
+const { ipcRenderer } = require('electron');
+const path = require('path');
+const btn = document.getElementById('joy-btn');
 let audio = null;
 
 const TRACKS = [
-  "Pete’s Bar Shines (1.50x).mp3",
-  "just a weekend.mp3",
+  "Petes Bar Shines (1.50x).mp3",
 ];
 
 const LABELS = [
-  ‘bring me joy’,
-  ‘one more time’,
-  ‘yes please’,
-  ‘again!’,
-  ‘keep going’,
-  ‘more joy’,
+  'bring me joy',
+  'one more time',
+  'yes please',
+  'again!',
+  'keep going',
+  'more joy',
 ];
 let labelIndex = 0;
 
 const DRAG_THRESHOLD = 4;
 let dragging = false, offX, offY, startX, startY, didDrag = false;
 
-document.addEventListener(‘mousedown’, e => {
+document.addEventListener('mousedown', e => {
   dragging = true;
   didDrag = false;
   offX = startX = e.screenX;
   offY = startY = e.screenY;
-  document.body.style.cursor = ‘grabbing’;
-  btn.style.cursor = ‘grabbing’;
+  document.body.style.cursor = 'grabbing';
+  btn.style.cursor = 'grabbing';
 });
 
-document.addEventListener(‘mousemove’, e => {
+document.addEventListener('mousemove', e => {
   if (!dragging) return;
   const totalDx = Math.abs(e.screenX - startX);
   const totalDy = Math.abs(e.screenY - startY);
   if (!didDrag && totalDx < DRAG_THRESHOLD && totalDy < DRAG_THRESHOLD) return;
   didDrag = true;
-  ipcRenderer.send(‘drag-move’, { x: e.screenX - offX, y: e.screenY - offY });
+  ipcRenderer.send('drag-move', { x: e.screenX - offX, y: e.screenY - offY });
   offX = e.screenX;
   offY = e.screenY;
 });
 
-document.addEventListener(‘mouseup’, () => {
+document.addEventListener('mouseup', () => {
   dragging = false;
-  document.body.style.cursor = ‘grab’;
-  btn.style.cursor = ‘pointer’;
+  document.body.style.cursor = 'grab';
+  btn.style.cursor = 'pointer';
 });
 
-btn.addEventListener(‘click’, () => {
+btn.addEventListener('click', () => {
   if (didDrag) return;
-  ipcRenderer.send(‘fire-joy’);
+  ipcRenderer.send('fire-joy');
 
   labelIndex = (labelIndex + 1) % LABELS.length;
   btn.textContent = LABELS[labelIndex];
 
   if (audio) {
     audio.pause();
-    audio.src = ‘’;
+    audio.src = '';
   }
   const track = TRACKS[Math.floor(Math.random() * TRACKS.length)];
-  audio = new Audio(path.join(__dirname, ‘audio’, track));
+  audio = new Audio(path.join(__dirname, 'audio', track));
   audio.volume = 0;
   audio.play().catch(() => {});
 

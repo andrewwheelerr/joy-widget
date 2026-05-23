@@ -1,6 +1,6 @@
 {
   "name": "joy-widget",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "bring me joy",
   "main": "main.js",
   "scripts": {
@@ -17,7 +17,10 @@
     "productName": "Joy",
     "mac": {
       "category": "public.app-category.entertainment",
-      "target": ["dmg", "zip"],
+      "target": [
+        "dmg",
+        "zip"
+      ],
       "icon": "assets/icon.icns"
     },
     "files": [
@@ -27,7 +30,8 @@
       "audio/**",
       "assets/button.png",
       "node_modules/electron-updater/**",
-      "node_modules/electron-log/**"
+      "node_modules/electron-log/**",
+      "assets/haptic"
     ],
     "publish": {
       "provider": "github",
